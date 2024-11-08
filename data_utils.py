@@ -34,8 +34,10 @@ def preprocess_data(df):
 
     return df, user_mapping, item_mapping
 
-def split_data(df, test_size=0.1):
-    return train_test_split(df, test_size=test_size, random_state=RANDOM_SEED)
+def split_data(df, train_ratio=0.9, valid_ratio=0.05, test_ratio=0.05):
+    train_df, temp_df = train_test_split(df, test_size=(1-train_ratio), random_state=RANDOM_SEED)
+    valid_df, test_df = train_test_split(temp_df, test_size=(test_ratio/(valid_ratio+test_ratio)), random_state=RANDOM_SEED)
+    return train_df, valid_df, test_df
 
 class MovieLensDataset(Dataset):
     def __init__(self, df):
@@ -57,11 +59,13 @@ class MovieLensDataset(Dataset):
             'rating': torch.tensor(self.ratings[idx], dtype=torch.float)
         }
 
-def get_dataloaders(train_df, test_df):
+def get_dataloaders(train_df, valid_df, test_df):
     train_dataset = MovieLensDataset(train_df)
+    valid_dataset = MovieLensDataset(valid_df)
     test_dataset = MovieLensDataset(test_df)
     
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+    valid_loader = DataLoader(valid_dataset, batch_size=BATCH_SIZE)
     test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE)
     
-    return train_loader, test_loader
+    return train_loader, valid_loader, test_loader

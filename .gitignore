@@ -1,0 +1,7 @@
+*.pth
+*.csv
+*.json
+*.log
+*.h5
+*.txt
+*.pyc

@@ -7,7 +7,7 @@ class WideAndDeepModel(nn.Module):
         super(WideAndDeepModel, self).__init__()
         
         # Wide part
-        self.wide = nn.Linear(num_users + num_items, 1)
+        self.wide = nn.Linear(num_users + num_items, HIDDEN_UNITS[-1])
         
         # Deep part
         self.user_embedding = nn.Embedding(num_users, EMBEDDING_DIM)
@@ -23,7 +23,8 @@ class WideAndDeepModel(nn.Module):
             self.deep_layers.append(nn.ReLU())
             self.deep_layers.append(nn.Dropout(DROPOUT))
         
-        self.final = nn.Linear(HIDDEN_UNITS[-1] + 1, 1)
+        # 修改最后一层为分类层（rating范围通常是1-5，所以是5个类别）
+        self.final = nn.Linear(HIDDEN_UNITS[-1] * 2, NUM_CLASSES)
         
     def forward(self, user, item, genre, tag):
         # 添加检查
@@ -48,5 +49,6 @@ class WideAndDeepModel(nn.Module):
             deep_input = layer(deep_input)
         
         # Combine wide and deep
-        output = self.final(torch.cat([deep_input, wide_output], dim=1))
-        return output.squeeze()
+        combined = torch.cat([deep_input, wide_output], dim=1)
+        logits = self.final(combined)
+        return logits

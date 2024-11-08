@@ -31,4 +31,16 @@ MERGED_DATA_PATH = "/storage/zhuangkai/data/recsys/ml-latest-small/merged_data.c
 
 # 保存路径
 SAVE_PATH = "/storage/zhuangkai/data/recsys/weights/wide_and_deep_model.pth"
+LOAD_WEIGHT_PATH = "/storage/zhuangkai/data/recsys/weights/best_model.pth"
+SAVE_DIR = "/storage/zhuangkai/data/recsys/weights"
+TEST_RESULTS_PATH = "/storage/zhuangkai/data/recsys/results/test_results.csv"
+
+# 日志路径
+LOG_DIR = "/storage/zhuangkai/data/recsys/logs"
+
+# 分类数（评分范围1-5，共5个类别）
+NUM_CLASSES = 10
+
+# 添加评分映射
+RATING_CLASSES = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
 

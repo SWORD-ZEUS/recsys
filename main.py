@@ -9,10 +9,10 @@ def main():
     df, user_mapping, item_mapping = preprocess_data(df)
     
     # 分割数据
-    train_df, test_df = split_data(df)
+    train_df, valid_df, test_df = split_data(df)
     
     # 准备数据加载器
-    train_loader, test_loader = get_dataloaders(train_df, test_df)
+    train_loader, valid_loader, test_loader = get_dataloaders(train_df, valid_df, test_df)
     
     # 初始化模型
     num_users = len(user_mapping)  # 使用映射后的用户数量
@@ -22,7 +22,7 @@ def main():
     model = WideAndDeepModel(num_users, num_items, num_genres, num_tags).to(DEVICE)
     
     # 训练模型
-    train_model(model, train_loader, test_loader, EPOCHS)
+    train_model(model, train_loader, valid_loader, test_loader, EPOCHS)
     
     # 保存模型
     torch.save(model.state_dict(), SAVE_PATH)
